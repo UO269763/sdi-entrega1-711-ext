@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head" />
+<body>
+	<nav th:replace="fragments/nav" />
+	<div class="container" style="text-align: center">
+		<h1 th:text="#{offer_bougth.message}"> Mis compras </h1>
+		
+		<form class="navbar-form" action="/oferta/listCompras">
+		</form>
+		<p th:text="#{offer_listC_p.message}">Las compras que actualmente figuran en el sistema son las
+			siguientes:</p>
+		<div class="table-responsive">
+			<table class="table table-hover" th:fragment="tableOfertas"
+				id="tableOfertas">
+				<thead>
+					<tr>
+						<th class="col-md-1">id</th>
+						<th th:text="#{offer_list_title.message}">Título</th>
+						<th th:text="#{offer_list_descrp.message}">Descripción</th>
+						<th th:text="#{offer_list_price.message}">Precio</th>
+						<th th:text="#{offer_list_vend.message}">Vendedor</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="oferta : ${ofertaList}">
+						<td th:text="${oferta.id}">1</td>
+						<td th:text="${oferta.titulo}">Sudadera adidas</td>
+						<td th:text="${oferta.descripcion}">Sudadera roja marca adidas</td>
+						<td th:text="${oferta.precio}">20</td>
+						<td th:text="${oferta.comprador}">Diego</td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+		
+</body>
+</html>

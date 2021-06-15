@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head" />
+<body>
+	<nav th:replace="fragments/nav" />
+	
+	<div class="container">
+		<h1 id="new-oferta-title" th:text="#{offer_add.message}"> Agregar oferta </h1>
+		
+		<form class="form-horizontal" method="post" action="/oferta/add"
+			 th:object="${oferta}">
+			 
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="titulo" th:text="#{offer_add_title.message}">Titulo:</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" name="titulo"
+						placeholder="Sudadera marca adidas seminueva" required="true" />
+						<span 
+							class="text-danger"
+								th:if="${#fields.hasErrors('titulo')}"
+								th:errors="*{titulo}"></span> 
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="descripcion" th:text="#{offer_add_descrp.message}">Descripcion:</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" name="descripcion"
+						placeholder="Sudadera de color roja, talla L, con una pequeña mancha" required="true" /> 
+						<span class="text-danger"
+						th:if="${#fields.hasErrors('descripcion')}"
+						th:errors="*{descripcion}" ></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="precio" th:text="#{offer_add_price.message}">Precio:</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control" name="precio"
+						placeholder="20" required="true" /> 
+						<span class="text-danger"
+						th:if="${#fields.hasErrors('precio')}"
+						th:errors="*{precio}" ></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary" th:text="#{send.message}">Enviar</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+<body th:fragment="body" id="body">
+	<!-- Barra de Navegación superior -->
+	<nav th:replace="fragments/nav"/>
+	<div class="container">
+		<h2 th:text="#{offer_search.message}">Buscar ofertas</h2>
+		<form class="navbar-form" action="/oferta/search">
+			<div class="form-group">
+				<input name="searchText" type="text" class="form-control" size="50"
+					placeholder="Buscar oferta por título">
+			</div>
+			<button type="submit" class="btn btn-default">Buscar</button>
+		</form>
+		<p th:text="#{offer_search_descrp.message}">Las ofertas encontradas son las siguientes:</p>
+		<div class="table-responsive">
+			<table class="table table-hover" th:fragment="tableOfertas"
+				id="tableOfertas">
+				<thead>
+					<tr>
+						<th th:text="#{offer_list_title.message}">Título</th>
+						<th th:text="#{offer_list_descrp.message}">Descripción</th>
+						<th th:text="#{offer_list_price.message}">Precio</th>
+						<th th:text="#{offer_list_buy.message}">Comprar</th>
+						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="oferta : ${ofertasList}">
+						<td th:text="${oferta.titulo}">Sudadera Nike</td>
+						<td th:text="${oferta.descripcion}">Gris</td>
+						<td th:text="${oferta.precio}">20€</td>
+						<td>
+							<div>
+								<div th:if="${oferta.comprable}">
+									<button type="button" th:id="${'comprarBoton' + oferta.id}"
+										class="btn btn-info" th:text="#{offer_list_buy.message}">Comprar</button>
+									<script th:inline="javascript">
+							/*<![CDATA[*/
+							$( "#comprarBoton[[${oferta.id}]]" ).click(function() {
+								$.get("/oferta/comprar/[[${oferta.id}]]", function(data) {
+									
+										var numberPage = [[${param.page}]];
+										var searchText = [[${param.searchText}]];
+										var urlUpdate = '/oferta/search/update';
+										var parameters = {}
+										if (searchText != null )
+											parameters['searchText'] = searchText[0]
+										if (numberPage != null )
+											parameters['page'] = numberPage[0]
+										
+										$("#tableOfertas").load(urlUpdate, parameters);
+								});
+							 });
+							 /*]]>*/
+						</script>
+								</div>
+								<div th:unless="${oferta.comprable}">
+									<button type="button" th:id="${'comprado' + oferta.id}"
+										class="btn btn-default" disabled th:text="#{offer_list_bougth.message}">Comprado</button>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div th:if="${oferta.precio > session.dinero && oferta.comprable}" >
+								No tienes saldo suficiente
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<footer th:replace="fragments/pagination" />
+	</div>
+	<footer th:replace="fragments/footer" />
+</body>
+</html>

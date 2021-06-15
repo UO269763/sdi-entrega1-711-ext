@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head" />
+<body>
+	<nav th:replace="fragments/nav" />
+	<div class="container" style="text-align: center">
+		<h1 th:text="#{offer_list.message}"> Mis ofertas </h1>
+		
+		<form class="navbar-form" action="/oferta/list">
+		</form>
+		<p th:text="#{offer_list_p.message}">Las ofertas que actualmente figuran en el sistema son las
+			siguientes:</p>
+		<div class="table-responsive">
+			<table class="table table-hover" th:fragment="tableOfertas"
+				id="tableOfertas">
+				<thead>
+					<tr>
+						<th class="col-md-1">id</th>
+						<th th:text="#{offer_list_title.message}">Título</th>
+						<th th:text="#{offer_list_date.message}">Fecha</th>
+						<th th:text="#{offer_list_descrp.message}">Descripción</th>
+						<th th:text="#{offer_list_price.message}">Precio</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="oferta : ${ofertaList}">
+						<td th:text="${oferta.id}">1</td>
+						<td th:text="${oferta.titulo}">Sudadera adidas</td>
+						<td th:text="${#dates.format(oferta.fecha, 'dd MMM yyyy')}"></td>
+						<td th:text="${oferta.descripcion}">Sudadera roja marca adidas</td>
+						<td th:text="${oferta.precio}">20</td>
+						<td><a th:text="#{delete.message}" th:href="${'/oferta/delete/' + oferta.id}">eliminar</a></td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+	<footer th:replace="fragments/pagination" />
+		
+		
+</body>
+</html>

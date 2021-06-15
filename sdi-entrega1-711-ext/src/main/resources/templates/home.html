@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+<body>
+	<nav th:replace="fragments/nav" />
+	<div class="container" style="text-align: center">
+		<h2 th:text="#{home_welcome.message}">Bienvenido</h2>
+		<h3 th:text="#{home_private.message}">Esta es una zona privada la Web</h3>
+		<p>
+			<b th:inline="text">
+				[[${#httpServletRequest.remoteUser}]] </b>
+		</p>
+		<p th:text="#{home_saldo.message}">
+			Saldo disponible
+		</p>
+		<p>
+					<b th:if="${session.containsKey('dinero')}"
+					th:text="${session.dinero}">€</b>
+		</p>
+		<p>
+					<b th:if="${session.containsKey('email')}"
+					th:text="${session.email}"></b>
+		</p>
+	</div>
+	<footer th:replace="fragments/footer" />
+</body>
+</html>

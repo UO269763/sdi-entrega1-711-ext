@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+<body>
+	<!-- Barra de Navegación superior -->
+	<nav th:replace="fragments/nav" />
+	<div class="container">
+		<h2 th:text="#{user_list_title.message}">Lista de usuarios de MyWallapop</h2>
+		<p th:text="#{user_list_descr.message}">Los usuarios que actualmente figuran en el sistema son los
+			siguientes:</p>
+		<button type="button" id="deleteButtonUsuarios"
+			class="btn btn-default" th:text="#{user_list_button.message}">Eliminar usuarios seleccionados</button>
+		<script th:inline="javascript">
+			$("#deleteButtonUsuarios").click(function() {
+				var c = 0;
+				var ids = [ 50 ];
+				$('#tableUsers input[type=checkbox]').each(function() {
+					if (this.checked) {
+						ids[c] = this.id;
+						c++;
+					}
+				});
+				for (let i = 0; i < 51; i++) {
+					if (ids[i] != null) {
+						$.get("delete/" + ids[i], function(data) {
+							$("#tableUsers").load('/user/list/update');
+						});
+					}
+
+				}
+			});
+		</script>
+		<div class="table-responsive">
+			<table class="table table-hover" th:fragment="tableUsers"
+				id="tableUsers">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Email</th>
+						<th th:text="#{name.message}">Nombre</th>
+						<th th:text="#{lastname.message}">Apellidos</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user : ${usersList}">
+						
+						<td><input class = "checkbox" type="checkbox" name="checkbox" th:id="${user.id}"></td>
+						<td th:text="${user.email}">71888888X</td>
+						<td th:text="${user.name}">Nombre del alumno</td>
+						<td th:text="${user.lastName}">Apellidos del alumno</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<footer th:replace="fragments/footer" />
+</body>
+</html>
