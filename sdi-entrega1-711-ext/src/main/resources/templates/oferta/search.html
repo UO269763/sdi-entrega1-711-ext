@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head th:replace="fragments/head" />
-<body th:fragment="body" id="body">
+<body>
 	<!-- Barra de Navegación superior -->
 	<nav th:replace="fragments/nav"/>
 	<div class="container">
@@ -31,10 +31,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="oferta : ${ofertasList}">
-						<td th:text="${oferta.titulo}">Sudadera Nike</td>
-						<td th:text="${oferta.descripcion}">Gris</td>
-						<td th:text="${oferta.precio}">20€</td>
+					<tr th:each="oferta : ${ofertasList}"  th:object="${oferta}" th:if="${oferta.user}!=${session.dinero}">
+						<td th:text="${oferta.titulo}"></td>
+						<td th:text="${oferta.descripcion}"></td>
+						<td th:text="${oferta.precio}"></td>
 						<td>
 							<div>
 								<div th:if="${oferta.comprable}">
@@ -46,15 +46,12 @@
 								$.get("/oferta/comprar/[[${oferta.id}]]", function(data) {
 									
 										var numberPage = [[${param.page}]];
-										var searchText = [[${param.searchText}]];
 										var urlUpdate = '/oferta/search/update';
-										var parameters = {}
-										if (searchText != null )
-											parameters['searchText'] = searchText[0]
+
 										if (numberPage != null )
-											parameters['page'] = numberPage[0]
+											urlUpdate += "?page"+numberPage[0];
 										
-										$("#tableOfertas").load(urlUpdate, parameters);
+										$("#tableOfertas").load(urlUpdate);
 								});
 							 });
 							 /*]]>*/
@@ -64,17 +61,14 @@
 									<button type="button" th:id="${'comprado' + oferta.id}"
 										class="btn btn-default" disabled th:text="#{offer_list_bougth.message}">Comprado</button>
 								</div>
-							</div>
-						</td>
-						<td>
-							<div th:if="${oferta.precio > session.dinero && oferta.comprable}" >
-								No tienes saldo suficiente
+				
 							</div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+		
 		<footer th:replace="fragments/pagination" />
 	</div>
 	<footer th:replace="fragments/footer" />

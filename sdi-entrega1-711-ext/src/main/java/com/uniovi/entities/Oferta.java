@@ -36,6 +36,7 @@ public class Oferta {
 		this.titulo=titulo;
 		this.descripcion=descripcion;
 		this.precio=precio;
+		this.comprador=null;
 	}
 	
 	public Oferta(User user, String titulo, String descripcion, int precio) {

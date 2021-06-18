@@ -22,6 +22,9 @@ public class OfertaService {
 	
 	@Autowired
 	private UsersRepository usersRepository;
+	
+	@Autowired
+	private UsersService usersService;
 
 	public Page<Oferta> getOfertas(Pageable pageable, User user) {
 		return ofertasRepository.findByUser(pageable, user);
@@ -36,24 +39,29 @@ public class OfertaService {
 		oferta.setUser(user);
 		ofertasRepository.save(oferta);
 	}
+	
+	public void addOferta(Oferta oferta) {
+		ofertasRepository.save(oferta);
+	}
 
 	public void deleteOferta(Long id) {
 		ofertasRepository.deleteById(id);
 	}
 
-	public void comprarOferta(Long id, User usuarioComprador) {
-		Optional<Oferta> oferta = ofertasRepository.findById(id);
+	public void comprarOferta(User usuarioComprador, Oferta oferta) {
+		usuarioComprador.setDinero(usuarioComprador.getDinero() - oferta.getPrecio());
+		oferta.setComprador(usuarioComprador);
+		addOferta(oferta);
+		usersService.editUser(usuarioComprador);
 		
-		Oferta aux = getOferta(id);
-		
-		Optional<User> usuario = usersRepository.findById(usuarioComprador.getId());
-		oferta.get().setComprable(false);
-		oferta.get().setComprador(usuarioComprador);
-		usuario.get().comprarOferta(aux);
-		usersRepository.save(usuario.get());
-		ofertasRepository.save(oferta.get());
 		
 	}
+	
+	public void comprarOferta(Long id, User user) {
+		comprarOferta(user, ofertasRepository.findById(id).get());
+		
+	}
+
 	
 	public double precioOferta(Long id) {
 		Optional<Oferta> oferta = ofertasRepository.findById(id);
@@ -84,6 +92,9 @@ public class OfertaService {
 		
 	}
 
+
+
+	
 	
 
 
