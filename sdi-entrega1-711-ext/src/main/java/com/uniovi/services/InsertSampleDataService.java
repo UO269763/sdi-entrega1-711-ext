@@ -3,9 +3,9 @@ package com.uniovi.services;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +16,14 @@ import com.uniovi.entities.User;
 public class InsertSampleDataService {
 
 	@Autowired
-	private UsersService usersService;
+	private UsersService usersService; // servicio de usuarios
 
 	@Autowired
-	private OfertaService ofertasService;
+	private OfertaService ofertasService; // servicio de ofertas
 
+	/**
+	 * Inserta usuarios y ofertas / ofertas compradas en la base de datos
+	 */
 	@PostConstruct
 	public void init() {
 		User user1 = new User("pedro@email.es", "Pedro", "Díaz");
@@ -47,7 +50,7 @@ public class InsertSampleDataService {
 		user6.setPassword("123456");
 		user6.setRole("ROLE_ADMIN");
 
-		Oferta oferta1 = new Oferta(user1, "Camiseta azul", "Talla L", 100);
+		Oferta oferta1 = new Oferta(user1, "Camiseta azul", "Talla L", 110);
 		Oferta oferta2 = new Oferta(user1, "Sudadera azul", "Talla M", 5);
 		Oferta oferta3 = new Oferta(user1, "Pantalon azul", "Talla XL", 3);
 		Oferta oferta4 = new Oferta(user2, "Zapatos nike", "Talla L", 10);
@@ -59,98 +62,98 @@ public class InsertSampleDataService {
 		Oferta oferta10 = new Oferta(user4, "Calcetines", "Seminuevos", 6);
 		Oferta oferta11 = new Oferta(user4, "Chandal completo", "Talla M", 9);
 		Oferta oferta12 = new Oferta(user4, "Chubasquero", "Talla XL", 11);
-		Oferta oferta13 = new Oferta(user5, "Zapatos", "Seminuevos", 2);
+		Oferta oferta13 = new Oferta(user5, "Zapatos", "Seminuevos", 90);
 		Oferta oferta14 = new Oferta(user5, "Sudadera", "Talla M", 6);
 		Oferta oferta15 = new Oferta(user5, "Pantalon", "Talla XL", 1);
 
-
-		
+		// inicializamos las listas de ofertas de cada usuario
 		List<Oferta> user1Ofertas = null;
-		
-			user1Ofertas = new ArrayList<Oferta>() {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
 
-				{
-					
-					add(oferta1);
-					add(oferta2);
-					add(oferta3);
-				}
-			};
-		
+		user1Ofertas = new ArrayList<Oferta>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			{
+
+				add(oferta1);
+				add(oferta2);
+				add(oferta3);
+			}
+		};
+
 		user1.setOfertas(new HashSet<>(user1Ofertas));
 
 		ArrayList<Oferta> user2Ofertas = null;
-			user2Ofertas = new ArrayList<Oferta>() {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
+		user2Ofertas = new ArrayList<Oferta>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
-				{
-					add(oferta4);
-					add(oferta5);
-					add(oferta6);
-				}
-			};
+			{
+				add(oferta4);
+				add(oferta5);
+				add(oferta6);
+			}
+		};
 		user2.setOfertas(new HashSet<>(user2Ofertas));
 
 		List<Oferta> user3Ofertas = null;
 		user3Ofertas = new ArrayList<Oferta>() {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
-				{
-					
-					add(oferta7);
-					add(oferta8);
-					add(oferta9);
-				}
-			};
-		
+			{
+
+				add(oferta7);
+				add(oferta8);
+				add(oferta9);
+			}
+		};
+
 		user3.setOfertas(new HashSet<>(user3Ofertas));
 
 		List<Oferta> user4Ofertas = null;
-		
-			user4Ofertas = new ArrayList<Oferta>() {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
 
-				{
-					
-					add(oferta10);
-					add(oferta11);
-					add(oferta12);
-				}
-			};
-		
+		user4Ofertas = new ArrayList<Oferta>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			{
+
+				add(oferta10);
+				add(oferta11);
+				add(oferta12);
+			}
+		};
+
 		user4.setOfertas(new HashSet<>(user4Ofertas));
 
 		List<Oferta> user5Ofertas = null;
-		
-			user5Ofertas = new ArrayList<Oferta>() {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
 
-				{
-					
-					add(oferta13);
-					add(oferta14);
-					add(oferta15);
-				}
-			};
-		
+		user5Ofertas = new ArrayList<Oferta>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			{
+
+				add(oferta13);
+				add(oferta14);
+				add(oferta15);
+			}
+		};
+
 		user5.setOfertas(new HashSet<>(user5Ofertas));
 
+		// añadimos los usuarios a la bd
 		usersService.addUser(user1);
 		usersService.addUser(user2);
 		usersService.addUser(user3);
@@ -158,7 +161,7 @@ public class InsertSampleDataService {
 		usersService.addUser(user5);
 		usersService.addUser(user6);
 
-		// Asignar compras hechas por usuarios
+		// asignar compras hechas por usuarios y guardamos en bd
 		ofertasService.comprarOferta(user1, user2Ofertas.get(1));
 		ofertasService.comprarOferta(user1, user3Ofertas.get(2));
 
@@ -173,7 +176,6 @@ public class InsertSampleDataService {
 
 		ofertasService.comprarOferta(user5, user1Ofertas.get(1));
 		ofertasService.comprarOferta(user5, user2Ofertas.get(2));
-
 
 	}
 

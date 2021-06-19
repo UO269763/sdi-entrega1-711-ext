@@ -20,12 +20,11 @@ public class OfertaValidator implements Validator{
 	@Override
 	public void validate(Object target, Errors errors) {
 		Oferta oferta = (Oferta) target;
-
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "titulo", "error.empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "descripcion", "error.empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "precio", "error.empty");
-		if (oferta.getTitulo().length() > MAX_LONG_TITULO)
-			errors.rejectValue("title", "error.oferta.title.length");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "titulo", "error.empty"); //valida que el titulo no esté en blanco
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "descripcion", "error.empty"); //valida que la descrp. no esté en blanco
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "precio", "error.empty"); //valida que el precio no esté en blanco
+		if (oferta.getTitulo().length() > MAX_LONG_TITULO) //valida que la longitud del titulo de la oferta sea menor que 38 caracteres
+			errors.rejectValue("title", "error.oferta.title.length"); 
 		
 	}
 

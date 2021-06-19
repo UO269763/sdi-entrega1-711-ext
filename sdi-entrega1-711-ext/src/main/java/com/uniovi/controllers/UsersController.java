@@ -28,31 +28,43 @@ import org.apache.log4j.Logger;
 @Controller
 public class UsersController {
 
-	private static final Logger logger = LogManager.getLogger(UsersController.class);
+	@Autowired
+	private RolesService rolesService; // servicio de roles
 
 	@Autowired
-	private RolesService rolesService;
+	private UsersService usersService; // servicio de usuarios
 
 	@Autowired
-	private UsersService usersService;
+	private SecurityService securityService; // servicio de seguridad
 
 	@Autowired
-	private SecurityService securityService;
+	private SignUpFormValidator signUpFormValidator; // validador de registro
 
 	@Autowired
-	private SignUpFormValidator signUpFormValidator;
+	private HttpSession httpSession; // httpSession
 
-	@Autowired
-	private HttpSession httpSession;
+	private static final Logger logger = LogManager.getLogger(UsersController.class); // logger para registrar eventos
 
-	// REGISTRO GET
+	/**
+	 * Retorna la plantilla de registro y añade el nuevo usuario al modelo
+	 * 
+	 * @param model
+	 * @return signup
+	 */
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String signup(Model model) {
 		model.addAttribute("user", new User());
 		return "signup";
 	}
 
-	// REGISTRO POST
+	/**
+	 * Método post de signup en el que se loguea al usuario y se guardan todas sus
+	 * credenciales. Se redirecciona a home
+	 * 
+	 * @param user
+	 * @param result
+	 * @return redirect::home
+	 */
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signup(@Validated User user, BindingResult result) {
 		signUpFormValidator.validate(user, result);
@@ -66,13 +78,26 @@ public class UsersController {
 		return "redirect:home";
 	}
 
-	// INICIO DE SESIÓN
+	/**
+	 * Método get del login
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model model) {
 		return "login";
 	}
 
-	// PÁGINA PRINCIPAL
+	/**
+	 * Método que retorna la página principal de la página web home. Asigna el
+	 * dinero y el usuario.
+	 * 
+	 * @param model
+	 * @param user
+	 * @param principal
+	 * @return home
+	 */
 	@RequestMapping(value = { "/home" }, method = RequestMethod.GET)
 	public String home(Model model, @ModelAttribute User user, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
@@ -82,21 +107,15 @@ public class UsersController {
 		return "home";
 	}
 
-	// AÑADIR NUEVO USUARIO GET
-	@RequestMapping(value = "/user/add")
-	public String getUser(Model model) {
-		model.addAttribute("usersList", usersService.getUsers());
-		return "user/add";
-	}
-
-	// AÑADIR NUEVO USUARIO POST
-	@RequestMapping(value = "/user/add", method = RequestMethod.POST)
-	public String setUser(@ModelAttribute User user) {
-		usersService.addUser(user);
-		return "redirect:/user/list";
-	}
-
-	// OBTENCIÓN DEL LISTADO
+	/**
+	 * Método que obtiene el listado de usuarios del sistema, excepto el admin Desde
+	 * este listado se podrá borrar, mediante el uso de checkboxes a los usuarios
+	 * que el administrador desee Además esta vista solo es accesible por el
+	 * administador
+	 * 
+	 * @param model
+	 * @return user/list
+	 */
 	@RequestMapping("/user/list")
 	public String getListado(Model model) {
 		List<User> usuarios = usersService.getUsers();
@@ -110,6 +129,13 @@ public class UsersController {
 		return "user/list";
 	}
 
+	/**
+	 * Método que actualiza el listado anterior, para cuando se elimina un usuario
+	 * Simplemente recarga la tabla de usuarios
+	 * 
+	 * @param model
+	 * @return /user/list :: tableUsers
+	 */
 	@RequestMapping("/user/list/update")
 	public String updateList(Model model) {
 		List<User> usuarios = usersService.getUsers();
@@ -123,6 +149,13 @@ public class UsersController {
 		return "user/list :: tableUsers";
 	}
 
+	/**
+	 * Método get que borra un usuario del sistema, solo accesible por el admin
+	 * Redirecciona al listado de usuarios
+	 * 
+	 * @param id
+	 * @return redirect:/user/list
+	 */
 	@RequestMapping("/user/delete/{id}")
 	public String delete(@PathVariable Long id) {
 		usersService.deleteUser(id);

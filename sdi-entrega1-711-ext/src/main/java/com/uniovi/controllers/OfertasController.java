@@ -30,20 +30,28 @@ import com.uniovi.validators.OfertaValidator;
 public class OfertasController {
 
 	@Autowired
-	private UsersService usersService;
-
-	@Autowired // Inyectar el servicio
-	private OfertaService ofertasService;
+	private UsersService usersService; // servicio de usuarios
 
 	@Autowired
-	private OfertaValidator ofertaValidator;
+	private OfertaService ofertasService; // servicio de ofertas
 
 	@Autowired
-	private HttpSession httpSession;
+	private OfertaValidator ofertaValidator; // validador de ofertas
 
-	private static final Logger logger = LogManager.getLogger(OfertasController.class);
+	@Autowired
+	private HttpSession httpSession; // httpSession
 
-	@RequestMapping(value="/oferta/list", method = RequestMethod.GET)
+	private static final Logger logger = LogManager.getLogger(OfertasController.class); // logger para registrar eventos
+
+	/**
+	 * Obtiene el listado de ofertas de las que es dueño el usuario logueado
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @param principal
+	 * @return oferta/list
+	 */
+	@RequestMapping(value = "/oferta/list", method = RequestMethod.GET)
 	public String getList(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
 		User user = usersService.getUserByEmail(email);
@@ -55,6 +63,18 @@ public class OfertasController {
 		return "oferta/list";
 	}
 
+	/**
+	 * Obtiene el listado de ofertas de otros usuarios, excepto las del propio
+	 * usuario, además tiene una búsqueda y permite comprar las ofertas en caso de
+	 * que estén disponibles (ya sea porque ya han sido compradas por otro usuario o
+	 * por nosotros o por no tener saldo suficiente)
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @param principal
+	 * @param searchText
+	 * @return oferta/search
+	 */
 	@RequestMapping(value = "/oferta/search", method = RequestMethod.GET)
 	public String getListado(Model model, Pageable pageable, Principal principal,
 			@RequestParam(value = "", required = false) String searchText) {
@@ -76,6 +96,15 @@ public class OfertasController {
 		return "oferta/search";
 	}
 
+	/**
+	 * Obtiene el listado anterior de ofertas de otros usuarios actualizado, para
+	 * cuando un usuario compra una oferta y hay que actualizar
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @param principal
+	 * @return oferta/search :: tableOfertas
+	 */
 	@RequestMapping("/oferta/search/update")
 	public String updateListado(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
@@ -87,14 +116,28 @@ public class OfertasController {
 		return "oferta/search :: tableOfertas";
 	}
 
+	/**
+	 * Retorna la plantilla para añadir una oferta
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @return oferta/add
+	 */
 	@RequestMapping(value = "/oferta/add")
 	public String getOferta(Model model, Pageable pageable) {
-		// Cambiar metodo usersService a pageable
-		model.addAttribute("usersList", usersService.getUsers());
 		model.addAttribute("oferta", new Oferta());
 		return "oferta/add";
 	}
 
+	/**
+	 * Metodo post para cuando se añade una oferta, retorna el listado de ofertas
+	 * propias en caso de success y un error si algún campo está mal rellenado
+	 * 
+	 * @param oferta
+	 * @param result
+	 * @param principal
+	 * @return redirect:/oferta/list
+	 */
 	@RequestMapping(value = "/oferta/add", method = RequestMethod.POST)
 	public String setOferta(@Validated Oferta oferta, BindingResult result, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
@@ -109,12 +152,27 @@ public class OfertasController {
 		return "redirect:/oferta/list";
 	}
 
-	@RequestMapping(value="/oferta/delete/{id}", method = RequestMethod.GET)
+	/**
+	 * Método para borrar una oferta desde el listado de ofertas propias,
+	 * redirecciona a oferta/list, es decir al mismo sitio
+	 * 
+	 * @param id
+	 * @return oferta/list
+	 */
+	@RequestMapping(value = "/oferta/delete/{id}", method = RequestMethod.GET)
 	public String deleteOferta(@PathVariable Long id) {
 		ofertasService.deleteOferta(id);
 		return "redirect:/oferta/list";
 	}
 
+	/**
+	 * Método para comprar una oferta desde /oferta/search que nos redirecciona al
+	 * mismo sitio
+	 * 
+	 * @param id
+	 * @param principal
+	 * @return redirect:/oferta/search
+	 */
 	@RequestMapping("/oferta/comprar/{id}")
 	public String comprarOferta(@PathVariable Long id, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
@@ -129,6 +187,13 @@ public class OfertasController {
 		return "redirect:/oferta/search";
 	}
 
+	/**
+	 * Retorna la lista de compras del usuario logueado
+	 * 
+	 * @param model
+	 * @param principal
+	 * @return oferta/listCompras
+	 */
 	@RequestMapping("/oferta/listCompras")
 	public String getListCompras(Model model, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación

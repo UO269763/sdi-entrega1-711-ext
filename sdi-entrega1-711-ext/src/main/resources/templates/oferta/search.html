@@ -36,7 +36,7 @@
 						<td th:text="${oferta.descripcion}"></td>
 						<td th:text="${oferta.precio}"></td>
 						<td>
-							<div th:if="${session.dinero>oferta.precio}">
+							<div th:if="${session.dinero>=oferta.precio}">
 								<div th:if="${oferta.comprable}">
 									<button type="button" th:id="${'comprarBoton' + oferta.id}"
 										class="btn btn-info" th:text="#{offer_list_buy.message}">Comprar</button>
@@ -63,7 +63,7 @@
 								</div>
 				
 							</div>
-							<div th:unless="${session.dinero>oferta.precio}">
+							<div th:unless="${session.dinero>=oferta.precio}">
 								<div th:text=#{offer.sin_saldo}>
 								Sin saldo</div>
 							</div>
