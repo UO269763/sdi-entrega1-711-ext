@@ -47,28 +47,22 @@ public class InsertSampleDataService {
 		user6.setPassword("123456");
 		user6.setRole("ROLE_ADMIN");
 
-		User user7 = new User("marcos@email.es", "Marcos", "Marino");
-		user7.setPassword("123456");
-		user7.setRole("ROLE_USER");
-
-		Oferta oferta1 = new Oferta(user1, "Camiseta azul", "Talla L", 20);
-		Oferta oferta2 = new Oferta(user1, "Sudadera azul", "Talla M", 10);
-		Oferta oferta3 = new Oferta(user1, "Pantalon azul", "Talla XL", 120);
-		Oferta oferta4 = new Oferta(user2, "Zapatos nike", "Talla L", 20);
-		Oferta oferta5 = new Oferta(user2, "Sudadera nike", "Talla M", 10);
-		Oferta oferta6 = new Oferta(user2, "Pantalon nike", "Talla XL", 120);
-		Oferta oferta7 = new Oferta(user3, "Zapatos adidas", "Talla L", 20);
-		Oferta oferta8 = new Oferta(user3, "Sudadera adidas", "Talla M", 10);
-		Oferta oferta9 = new Oferta(user3, "Pantalon adidas", "Talla XL", 120);
-		Oferta oferta10 = new Oferta(user4, "Calcetines", "Seminuevos", 2);
-		Oferta oferta11 = new Oferta(user4, "Chandal completo", "Talla M", 60);
-		Oferta oferta12 = new Oferta(user4, "Chubasquero", "Talla XL", 120);
+		Oferta oferta1 = new Oferta(user1, "Camiseta azul", "Talla L", 100);
+		Oferta oferta2 = new Oferta(user1, "Sudadera azul", "Talla M", 5);
+		Oferta oferta3 = new Oferta(user1, "Pantalon azul", "Talla XL", 3);
+		Oferta oferta4 = new Oferta(user2, "Zapatos nike", "Talla L", 10);
+		Oferta oferta5 = new Oferta(user2, "Sudadera nike", "Talla M", 4);
+		Oferta oferta6 = new Oferta(user2, "Pantalon nike", "Talla XL", 12);
+		Oferta oferta7 = new Oferta(user3, "Zapatos adidas", "Talla L", 10);
+		Oferta oferta8 = new Oferta(user3, "Sudadera adidas", "Talla M", 2);
+		Oferta oferta9 = new Oferta(user3, "Pantalon adidas", "Talla XL", 5);
+		Oferta oferta10 = new Oferta(user4, "Calcetines", "Seminuevos", 6);
+		Oferta oferta11 = new Oferta(user4, "Chandal completo", "Talla M", 9);
+		Oferta oferta12 = new Oferta(user4, "Chubasquero", "Talla XL", 11);
 		Oferta oferta13 = new Oferta(user5, "Zapatos", "Seminuevos", 2);
-		Oferta oferta14 = new Oferta(user5, "Sudadera", "Talla M", 60);
-		Oferta oferta15 = new Oferta(user5, "Pantalon", "Talla XL", 120);
-		Oferta oferta16 = new Oferta(user7, "Gorra", "Seminueva", 10);
-		Oferta oferta17 = new Oferta(user7, "Abrigo", "Azul", 90);
-		Oferta oferta18 = new Oferta(user7, "Sombrero", "Amarillo", 120);
+		Oferta oferta14 = new Oferta(user5, "Sudadera", "Talla M", 6);
+		Oferta oferta15 = new Oferta(user5, "Pantalon", "Talla XL", 1);
+
 
 		
 		List<Oferta> user1Ofertas = null;

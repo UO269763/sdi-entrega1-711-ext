@@ -4,9 +4,13 @@
 <head th:replace="fragments/head" />
 <body>
 	<nav th:replace="fragments/nav" />
-	<div class="container" style="text-align: center">
+	<div class="container" style="text-align: center" sec:authorize="!isAuthenticated()">
 		<h2 th:text="#{welcome.message}"></h2>
 		<p th:text="#{welcome_p.message}">Inicia sesión o regístrate</p>
+	</div>
+	<div class="container" style="text-align: center" sec:authorize="isAuthenticated()">
+		<h2 th:text="#{welcome.message}"></h2>
+		<p><a href="/home">Home</a></p>
 	</div>
 	<footer th:replace="fragments/footer" />
 </body>

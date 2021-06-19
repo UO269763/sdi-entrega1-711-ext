@@ -43,18 +43,13 @@ public class OfertasController {
 
 	private static final Logger logger = LogManager.getLogger(OfertasController.class);
 
-	@RequestMapping("/oferta/list")
-	public String getList(Model model, Pageable pageable, Principal principal,
-			@RequestParam(value = "", required = false) String searchText) {
+	@RequestMapping(value="/oferta/list", method = RequestMethod.GET)
+	public String getList(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
 		User user = usersService.getUserByEmail(email);
 		Page<Oferta> ofertas = new PageImpl<Oferta>(new LinkedList<Oferta>());
-		if (searchText != null && !searchText.isEmpty()) {
-			// cambiar cuando haya roles
-			ofertas = ofertasService.getOfertas(pageable, user);
-		} else {
-			ofertas = ofertasService.getOfertas(pageable, user);
-		}
+		httpSession.setAttribute("dinero", user.getDinero());
+		ofertas = ofertasService.getOfertas(pageable, user);
 		model.addAttribute("ofertaList", ofertas.getContent());
 		model.addAttribute("page", ofertas);
 		return "oferta/list";
@@ -62,51 +57,34 @@ public class OfertasController {
 
 	@RequestMapping(value = "/oferta/search", method = RequestMethod.GET)
 	public String getListado(Model model, Pageable pageable, Principal principal,
-			@RequestParam(value = "", required = false) String searchText,
-			@RequestParam(value = "error", required = false) String error) {
-
+			@RequestParam(value = "", required = false) String searchText) {
+		String email = principal.getName(); // email es el name de la autenticación
+		User user = usersService.getUserByEmail(email);
+		httpSession.setAttribute("dinero", user.getDinero());
 		Page<Oferta> ofertas = new PageImpl<Oferta>(new LinkedList<Oferta>());
 		// en caso de que sea una cadena vacía se tienen que listar todas las ofertas de
 		// la página
 		// en caso de que el searchtext no esté vacío mostrar resultados.
 		if (searchText != null && !searchText.isEmpty()) {
-			ofertas = ofertasService.searchOfertaByTitulo(pageable, searchText);
-
+			ofertas = ofertasService.searchOfertaByTitulo(pageable, searchText, user);
 		} else {
-			ofertas = ofertasService.searchAllOfertas(pageable);
+			ofertas = ofertasService.searchAllOfertasUnlessMine(pageable, user);
 		}
 		model.addAttribute("ofertasList", ofertas.getContent());
 		model.addAttribute("page", ofertas);
-		boolean hayError = false;
-
-		if (error != null) {
-			hayError = true;
-		}
-		model.addAttribute("hayError", hayError);
 
 		return "oferta/search";
 	}
 
 	@RequestMapping("/oferta/search/update")
 	public String updateListado(Model model, Pageable pageable, Principal principal) {
-		Page<Oferta> ofertas = new PageImpl<Oferta>(new LinkedList<Oferta>());
-		ofertas = ofertasService.searchAllOfertas(pageable);
-
-		model.addAttribute("ofertasList", ofertas.getContent());
-		return "oferta/search :: tableOfertas";
-	}
-
-	@RequestMapping(value = "/oferta/add", method = RequestMethod.POST)
-	public String setOferta(@Validated Oferta oferta, BindingResult result, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
 		User user = usersService.getUserByEmail(email);
-		ofertaValidator.validate(oferta, result);
-		if (result.hasErrors()) {
-			return "oferta/add";
-		}
-		ofertasService.addOferta(oferta, user);
-		logger.debug(String.format("Oferta añadida", user.getEmail()));
-		return "redirect:/oferta/list";
+		httpSession.setAttribute("dinero", user.getDinero());
+		Page<Oferta> ofertas = new PageImpl<Oferta>(new LinkedList<Oferta>());
+		ofertas = ofertasService.searchAllOfertasUnlessMine(pageable, user);
+		model.addAttribute("ofertasList", ofertas.getContent());
+		return "oferta/search :: tableOfertas";
 	}
 
 	@RequestMapping(value = "/oferta/add")
@@ -117,16 +95,23 @@ public class OfertasController {
 		return "oferta/add";
 	}
 
-	@RequestMapping("/oferta/details/{id}")
-	public String getDetail(Model model, @PathVariable Long id) {
-		model.addAttribute("oferta", ofertasService.getOferta(id));
-		return "oferta/details";
+	@RequestMapping(value = "/oferta/add", method = RequestMethod.POST)
+	public String setOferta(@Validated Oferta oferta, BindingResult result, Principal principal) {
+		String email = principal.getName(); // email es el name de la autenticación
+		User user = usersService.getUserByEmail(email);
+		httpSession.setAttribute("dinero", user.getDinero());
+		ofertaValidator.validate(oferta, result);
+		if (result.hasErrors()) {
+			return "oferta/add";
+		}
+		ofertasService.addOferta(oferta, user);
+		logger.debug(String.format("Oferta añadida", user.getEmail()));
+		return "redirect:/oferta/list";
 	}
 
-	@RequestMapping("/oferta/delete/{id}")
+	@RequestMapping(value="/oferta/delete/{id}", method = RequestMethod.GET)
 	public String deleteOferta(@PathVariable Long id) {
 		ofertasService.deleteOferta(id);
-		logger.debug(String.format("Oferta borrada", ofertasService.getOferta(id).getUser().getEmail()));
 		return "redirect:/oferta/list";
 	}
 
@@ -137,19 +122,18 @@ public class OfertasController {
 		double precioOferta = ofertasService.precioOferta(id);
 		double dineroUsuario = user.getDinero();
 		if (precioOferta <= dineroUsuario) {
-			user.setDinero(dineroUsuario - precioOferta);
-			ofertasService.comprarOferta(id, user);
+			ofertasService.comprarOfertaIdOf(id, user);
 			logger.debug(String.format("Oferta comprada", user.getEmail()));
 			return "redirect:/oferta/search";
-		} else {
-			return "redirect:/oferta/search?error";
 		}
+		return "redirect:/oferta/search";
 	}
 
 	@RequestMapping("/oferta/listCompras")
 	public String getListCompras(Model model, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
 		User user = usersService.getUserByEmail(email);
+		httpSession.setAttribute("dinero", user.getDinero());
 		model.addAttribute("ofertaList", user.getOfertasCompradas());
 		return "oferta/listCompras";
 	}

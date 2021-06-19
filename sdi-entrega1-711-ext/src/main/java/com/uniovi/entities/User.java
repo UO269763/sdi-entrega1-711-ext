@@ -1,6 +1,9 @@
 package com.uniovi.entities;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -34,11 +37,11 @@ public class User {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Oferta> ofertas;
+	private Set<Oferta> ofertas = new HashSet<>();;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "comprador", cascade = CascadeType.ALL)
-	private Set<Oferta> ofertasCompradas;
+	private Set<Oferta> ofertasCompradas = new HashSet<>();
 
 	public User(String email, String name, String lastName) {
 		super();
@@ -133,12 +136,12 @@ public class User {
 
 	public void comprarOferta(Oferta oferta) {
 		this.ofertasCompradas.add(oferta);
-		this.dinero -= oferta.getPrecio();
 	}
 
 	@Override
 	public String toString() {
 		return email;
 	}
+
 
 }

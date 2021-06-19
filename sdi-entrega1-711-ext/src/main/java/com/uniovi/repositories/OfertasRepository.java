@@ -21,11 +21,15 @@ public interface OfertasRepository extends CrudRepository<Oferta, Long> {
 	@Query("DELETE FROM Oferta o WHERE o.user.id = ?1")
 	void deleteForUserId(Long id);
 	
-	@Query("SELECT u FROM Oferta u WHERE (LOWER(u.titulo) LIKE LOWER(?1))")
-	Page<Oferta> findByTitulo(Pageable pageable, String searchText);
+	@Query("SELECT u FROM Oferta u WHERE (LOWER(u.titulo) LIKE LOWER(?1)) AND u.user<>?2")
+	Page<Oferta> findByTitulo(Pageable pageable, String searchText, User user);
 
 	@Query("SELECT u from Oferta u")
 	Page<Oferta> findAllOfertas(Pageable pageable);
+
+	@Query("SELECT u FROM Oferta u WHERE u.user<>?1")
+	Page<Oferta> findAllOfertasUnlessMine(Pageable pageable, User user);
+
 	
 
 }

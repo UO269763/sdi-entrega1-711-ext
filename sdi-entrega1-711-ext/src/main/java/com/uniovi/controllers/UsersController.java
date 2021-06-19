@@ -1,5 +1,6 @@
 package com.uniovi.controllers;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import org.apache.log4j.Logger;
 
 @Controller
 public class UsersController {
-	
+
 	private static final Logger logger = LogManager.getLogger(UsersController.class);
 
 	@Autowired
@@ -73,10 +74,11 @@ public class UsersController {
 
 	// PÁGINA PRINCIPAL
 	@RequestMapping(value = { "/home" }, method = RequestMethod.GET)
-	public String home(Model model, @ModelAttribute User user) {
-		// HttpSession
-		model.addAttribute("user", user);
+	public String home(Model model, @ModelAttribute User user, Principal principal) {
+		String email = principal.getName(); // email es el name de la autenticación
+		user = usersService.getUserByEmail(email);
 		httpSession.setAttribute("dinero", user.getDinero());
+		model.addAttribute("user", user);
 		return "home";
 	}
 
@@ -124,7 +126,6 @@ public class UsersController {
 	@RequestMapping("/user/delete/{id}")
 	public String delete(@PathVariable Long id) {
 		usersService.deleteUser(id);
-		logger.debug(String.format("User eliminado", usersService.getUser(id).getEmail() ));
 		return "redirect:/user/list";
 	}
 

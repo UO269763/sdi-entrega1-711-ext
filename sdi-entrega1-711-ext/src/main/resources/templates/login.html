@@ -5,10 +5,7 @@
 	<nav th:replace="fragments/nav" />
 	<div class="container">
 		<h2 th:text="#{login.message}">Identificate</h2>
-		
-		<div class="alert alert-danger" th:if="${error != null}"
-			th:text="#{error.login}"></div>
-		
+
 		<form class="form-horizontal" method="post" action="/login">
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="username">Email:</label>

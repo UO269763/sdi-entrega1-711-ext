@@ -14,8 +14,8 @@
 			Saldo disponible
 		</p>
 		<p>
-					<b th:if="${session.containsKey('dinero')}"
-					th:text="${session.dinero}">€</b>
+					<b
+					th:text="${user.dinero}">€</b>
 		</p>
 		<p>
 					<b th:if="${session.containsKey('email')}"
