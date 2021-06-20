@@ -4,8 +4,8 @@
 <body>
 	<nav th:replace="fragments/nav" />
 	<div class="container" style="text-align: center">
-		<h1 th:text="#{offer_list.message}">Mis ofertas</h1>
-
+		<h1 th:text="#{offer_list.message}"></h1>
+		<p id="errordinero" class='text-danger'></p>
 		<form class="navbar-form" action="/oferta/list"></form>
 		<p th:text="#{offer_list_p.message}">Las ofertas que actualmente
 			figuran en el sistema son las siguientes:</p>
@@ -29,8 +29,68 @@
 						<td th:text="${#dates.format(oferta.fecha, 'dd MMM yyyy')}"></td>
 						<td th:text="${oferta.descripcion}"></td>
 						<td th:text="${oferta.precio}"></td>
-						<td><a th:href="${'/oferta/delete/' + oferta.id}" th:text="#{delete.message}">eliminar</a></td>
-
+						<td><a th:href="${'/oferta/delete/' + oferta.id}"
+							th:text="#{delete.message}">eliminar</a></td>
+						<td><div>
+								<div th:if="${oferta.destacada}">
+									<button type="button" th:id="${'btnNoDestacada' + oferta.id}"
+										class="btn btn-info"
+										th:text="#{offer_list_no_destacada.message}"></button>
+									<script th:inline="javascript">
+										/*<![CDATA[*/$(
+												"#btnNoDestacada[[${oferta.id}]]")
+												.click(
+														function() {
+															$
+																	.get(
+																			"/oferta/nodestacada/[[${oferta.id}]]",
+																			function(
+																					data) {
+																				var numberPage = [[${param.page}]];                   
+																				var urlUpdate = '/oferta/list/update';                   
+																				if ( numberPage != null ){                       
+																					urlUpdate += "?page="+numberPage[0];                   
+																					}                   
+																				$("#tableOfertasList").load(urlUpdate);
+																			});
+														}); /*]]>*/
+									</script>
+								</div>
+								<div th:unless="${oferta.destacada}">
+									<button type="button" th:id="${'btnDestacada' + oferta.id}"
+										class="btn btn-default"
+										th:text="#{offer_list_destacada.message}"></button>
+									<script th:inline="javascript">
+										/*<![CDATA[*/$(
+												"#btnDestacada[[${oferta.id}]]")
+												.click(
+														function() {
+															if([[${session.dinero}]]>=20) {
+																$.get(
+																			"/oferta/destacada/[[${oferta.id}]]",
+																			function(
+																					data) {
+																				var numberPage = [[${param.page}]];
+																				
+																				var urlUpdate = '/oferta/list/update';                   
+																				if ( numberPage != null ){                      
+																					urlUpdate += "?page="+numberPage[0];                  
+																					}  
+																				
+																				$("#tableOfertasList").load(urlUpdate);
+																				var urlUpdate = '/oferta/list/reload/dinero'; 
+																				
+																				$("#nav").load(urlUpdate);
+																				
+																			});
+															} else {
+																$(
+																"#errordinero").text([[#{Error.dinero}]]);
+															}
+														}); /*]]>*/
+									</script>
+								</div>
+							</div></td>
 					</tr>
 				</tbody>
 			</table>

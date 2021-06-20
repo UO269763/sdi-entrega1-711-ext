@@ -3,7 +3,7 @@
 <head th:replace="fragments/head" />
 <body>
 	<!-- Barra de Navegación superior -->
-	<nav th:replace="fragments/nav"/>
+	<nav th:replace="fragments/nav" />
 	<div class="container">
 		<h2 th:text="#{offer_search.message}">Buscar ofertas</h2>
 		<form class="navbar-form" action="/oferta/search">
@@ -13,16 +13,18 @@
 			</div>
 			<button type="submit" class="btn btn-default">Buscar</button>
 		</form>
-		<p th:text="#{offer_search_descrp.message}">Las ofertas encontradas son las siguientes:</p>
+		<p th:text="#{offer_search_descrp.message}">Las ofertas
+			encontradas son las siguientes:</p>
 		<div class="table-responsive">
 			<table class="table table-hover" th:fragment="tableOfertas"
 				id="tableOfertas">
 				<thead>
 					<tr>
-						<th th:text="#{offer_list_title.message}">Título</th>
-						<th th:text="#{offer_list_descrp.message}">Descripción</th>
-						<th th:text="#{offer_list_price.message}">Precio</th>
-						<th th:text="#{offer_list_buy.message}">Comprar</th>
+						<th th:text="#{offer_list_title.message}"></th>
+						<th th:text="#{offer_list_descrp.message}"></th>
+						<th th:text="#{offer_list_price.message}"></th>
+						<th th:text="#{offer_list_date.message}"></th>
+						<th th:text="#{offer_list_buy.message}"></th>
 						<th class="col-md-1"></th>
 						<th class="col-md-1"></th>
 						<th class="col-md-1"></th>
@@ -31,10 +33,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="oferta : ${ofertasList}"  th:object="${oferta}" th:if="${oferta.user}!=${session.dinero}">
+					<tr th:each="oferta : ${ofertasList}" th:object="${oferta}"
+						th:if="${oferta.user}!=${session.dinero}">
 						<td th:text="${oferta.titulo}"></td>
 						<td th:text="${oferta.descripcion}"></td>
 						<td th:text="${oferta.precio}"></td>
+						<td th:text="${#dates.format(oferta.fecha, 'dd MMM yyyy')}"></td>
+						
 						<td>
 							<div th:if="${session.dinero>=oferta.precio}">
 								<div th:if="${oferta.comprable}">
@@ -45,6 +50,9 @@
 							$( "#comprarBoton[[${oferta.id}]]" ).click(function() {
 								$.get("/oferta/comprar/[[${oferta.id}]]", function(data) {
 									
+										var urlUpdate = '/oferta/search/reload/dinero'; 
+										
+										$("#nav").load(urlUpdate);
 										var numberPage = [[${param.page}]];
 										var urlUpdate = '/oferta/search/update';
 
@@ -52,6 +60,8 @@
 											urlUpdate += "?page"+numberPage[0];
 										
 										$("#tableOfertas").load(urlUpdate);
+										
+										
 								});
 							 });
 							 /*]]>*/
@@ -59,20 +69,20 @@
 								</div>
 								<div th:unless="${oferta.comprable}">
 									<button type="button" th:id="${'comprado' + oferta.id}"
-										class="btn btn-default" disabled th:text="#{offer_list_bougth.message}">Comprado</button>
+										class="btn btn-default" disabled
+										th:text="#{offer_list_bougth.message}">Comprado</button>
 								</div>
-				
+
 							</div>
 							<div th:unless="${session.dinero>=oferta.precio}">
-								<div th:text=#{offer.sin_saldo}>
-								Sin saldo</div>
+								<div th:text=#{offer.sin_saldo}></div>
 							</div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		
+
 		<footer th:replace="fragments/pagination" />
 	</div>
 	<footer th:replace="fragments/footer" />

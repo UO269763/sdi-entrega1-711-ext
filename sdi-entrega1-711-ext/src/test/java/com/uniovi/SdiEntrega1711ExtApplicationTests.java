@@ -491,7 +491,6 @@ public class SdiEntrega1711ExtApplicationTests {
 	public void PR22() {
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
 		// Rellenamos el formulario
-		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "pedro@email.es", "123456");
 		// COmprobamos que entramos en la pagina privada de usuario
 		PO_View.checkElement(driver, "text", "Gestión de ofertas");
@@ -552,7 +551,6 @@ public class SdiEntrega1711ExtApplicationTests {
 	@Test
 	public void PR24() {
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-		// Rellenamos el formulario
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "pedro@email.es", "123456");
 		// COmprobamos que entramos en la pagina privada de usuario
@@ -636,7 +634,6 @@ public class SdiEntrega1711ExtApplicationTests {
 		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'oferta/listCompras')]");
 		SeleniumUtils.esperarSegundos(driver, 2);
 		elementos.get(0).click();
-		
 		SeleniumUtils.esperarSegundos(driver, 2);
 		PO_View.checkElement(driver, "text", "Zapatos adidas");
 		PO_View.checkElement(driver, "text", "Zapatos");
@@ -687,7 +684,6 @@ public class SdiEntrega1711ExtApplicationTests {
 	@Test
 	public void PR28() {
 		URL = "http://localhost:8090/user/list";
-
 		driver.navigate().to(URL);
 		PO_View.checkElement(driver, "text", "Identifícate");
 	}
@@ -709,7 +705,6 @@ public class SdiEntrega1711ExtApplicationTests {
 	@Test
 	public void PR30() {
 		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-		// Rellenamos el formulario
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "pedro@email.es", "123456");
 		// Comprobamos que entramos en la pagina privada de usuario

@@ -1,9 +1,6 @@
 package com.uniovi.entities;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -141,6 +137,10 @@ public class User {
 	@Override
 	public String toString() {
 		return email;
+	}
+
+	public void destacarOferta() {
+		this.dinero-=20;		
 	}
 
 }

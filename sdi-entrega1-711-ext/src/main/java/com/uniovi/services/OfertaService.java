@@ -38,6 +38,17 @@ public class OfertaService {
 	}
 
 	/**
+	 * Obtiene la lista de ofertas destacadas exceptuando las del usuario actual
+	 * 
+	 * @param pageable
+	 * @param user
+	 * @return
+	 */
+	public Page<Oferta> getOfertasDestacadas(Pageable pageable, User user) {
+		return ofertasRepository.findOfertasDestacadas(pageable,user);
+	}
+
+	/**
 	 * Obtiene una oferta según id
 	 * 
 	 * @param id
@@ -75,6 +86,18 @@ public class OfertaService {
 	 */
 	public void deleteOferta(Long id) {
 		ofertasRepository.deleteById(id);
+	}
+
+	/**
+	 * Marca una oferta como destacada/no destacada
+	 * 
+	 * @param b
+	 * @param id
+	 */
+	public void setOfertaDestacada(boolean b, Long id) {
+		Oferta oferta = ofertasRepository.findById(id).get();
+		oferta.setDestacada(b);
+		editOferta(oferta);
 	}
 
 	/**

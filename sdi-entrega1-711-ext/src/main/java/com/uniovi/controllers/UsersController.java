@@ -6,24 +6,26 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.uniovi.entities.Oferta;
 import com.uniovi.entities.User;
+import com.uniovi.services.OfertaService;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SecurityService;
 import com.uniovi.services.UsersService;
 import com.uniovi.validators.SignUpFormValidator;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 @Controller
 public class UsersController {
@@ -34,6 +36,9 @@ public class UsersController {
 	@Autowired
 	private UsersService usersService; // servicio de usuarios
 
+	@Autowired
+	private OfertaService ofertasService; // servicio de ofertas
+	
 	@Autowired
 	private SecurityService securityService; // servicio de seguridad
 
@@ -99,11 +104,14 @@ public class UsersController {
 	 * @return home
 	 */
 	@RequestMapping(value = { "/home" }, method = RequestMethod.GET)
-	public String home(Model model, @ModelAttribute User user, Principal principal) {
+	public String home(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
-		user = usersService.getUserByEmail(email);
+		User user = usersService.getUserByEmail(email);
 		httpSession.setAttribute("dinero", user.getDinero());
+		Page<Oferta> ofertas = ofertasService.getOfertasDestacadas(pageable, user);
+		model.addAttribute("ofertasDestacadasList", ofertas.getContent());
 		model.addAttribute("user", user);
+		model.addAttribute("page", ofertas);
 		return "home";
 	}
 

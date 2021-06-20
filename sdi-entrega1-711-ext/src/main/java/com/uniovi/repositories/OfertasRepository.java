@@ -64,4 +64,14 @@ public interface OfertasRepository extends CrudRepository<Oferta, Long> {
 	@Query("SELECT u FROM Oferta u WHERE u.user<>?1")
 	Page<Oferta> findAllOfertasUnlessMine(Pageable pageable, User user);
 
+	/**
+	 * Obtiene la lista de ofertas destacadas excepto las propias
+	 * 
+	 * @param pageable
+	 * @param user
+	 * @return
+	 */
+	@Query("SELECT u FROM Oferta u WHERE u.user<>?1 and u.destacada=true")
+	Page<Oferta> findOfertasDestacadas(Pageable pageable, User user);
+
 }

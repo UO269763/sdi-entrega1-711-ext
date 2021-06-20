@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,6 +62,26 @@ public class OfertasController {
 		model.addAttribute("ofertaList", ofertas.getContent());
 		model.addAttribute("page", ofertas);
 		return "oferta/list";
+	}
+
+	/**
+	 * Recarga la tabla cuando un usuario destaca una oferta propia
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping(value = "/oferta/list/update", method = RequestMethod.GET)
+	public String getListUpdate(Model model, Pageable pageable, Principal principal) {
+		String email = principal.getName(); // email es el name de la autenticación
+		User user = usersService.getUserByEmail(email);
+		httpSession.setAttribute("dinero", user.getDinero());
+		Page<Oferta> ofertas = new PageImpl<Oferta>(new LinkedList<Oferta>());
+		ofertas = ofertasService.getOfertas(pageable, user);
+		model.addAttribute("ofertaList", ofertas.getContent());
+		return "oferta/list :: tableOfertasList";
+
 	}
 
 	/**
@@ -147,7 +168,13 @@ public class OfertasController {
 		if (result.hasErrors()) {
 			return "oferta/add";
 		}
+		if (oferta.getDestacada()) {
+			logger.debug(String.format("Oferta añadida como destacada", user.getEmail()));
+			user.destacarOferta();
+			usersService.editUser(user);
+		}
 		ofertasService.addOferta(oferta, user);
+		httpSession.setAttribute("dinero", user.getDinero());
 		logger.debug(String.format("Oferta añadida", user.getEmail()));
 		return "redirect:/oferta/list";
 	}
@@ -182,9 +209,21 @@ public class OfertasController {
 		if (precioOferta <= dineroUsuario) {
 			ofertasService.comprarOfertaIdOf(id, user);
 			logger.debug(String.format("Oferta comprada", user.getEmail()));
-			return "redirect:/oferta/search";
 		}
 		return "redirect:/oferta/search";
+	}
+	
+	@RequestMapping(value = "/home/oferta/comprar/{id}", method = RequestMethod.GET)
+	public String comprarOfertaHome(Model model, Principal principal, @PathVariable Long id) {
+		String email = principal.getName(); // email es el name de la autenticación
+		User user = usersService.getUserByEmail(email);
+		double precioOferta = ofertasService.precioOferta(id);
+		double dineroUsuario = user.getDinero();
+		if (precioOferta <= dineroUsuario) {
+			ofertasService.comprarOfertaIdOf(id, user);
+			logger.debug(String.format("Oferta comprada", user.getEmail()));
+		}
+		return "redirect:/home";
 	}
 
 	/**
@@ -202,4 +241,80 @@ public class OfertasController {
 		model.addAttribute("ofertaList", user.getOfertasCompradas());
 		return "oferta/listCompras";
 	}
+
+	/**
+	 * Marca una oferta como destacada en caso de que el usuario logueado tenga el
+	 * dinero suficiente (20 euros)
+	 * 
+	 * @param model
+	 * @param id
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping(value = "/oferta/destacada/{id}", method = RequestMethod.GET)
+	public String setDestacada(@PathVariable Long id, Principal principal) {
+		String email = principal.getName(); // email es el name de la autenticación
+		User user = usersService.getUserByEmail(email);
+		if (user.getDinero() >= 20) { // si el usuario tiene dinero suficiente se marca como destacada
+			user.destacarOferta();
+			httpSession.setAttribute("dinero", user.getDinero());
+			usersService.editUser(user);
+			ofertasService.setOfertaDestacada(true, id);
+		}
+		return "redirect:/oferta/list";
+
+	}
+
+	/**
+	 * Marca una oferta como no destacada
+	 * 
+	 * @param model
+	 * @param id
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping(value = "oferta/nodestacada/{id}", method = RequestMethod.GET)
+	public String setNoDestacada(@PathVariable Long id) {
+		ofertasService.setOfertaDestacada(false, id);
+		return "redirect:/oferta/list";
+	}
+
+	/**
+	 * Metodo que recarga el saldo cuando un usuario destaca una oferta
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping("/oferta/list/reload/dinero")
+	public String updateSaldoList(Model model, Pageable pageable, Principal principal) {
+		return "oferta/list :: nav";
+	}
+	
+	/**
+	 * Metodo que recarga el saldo cuando un usuario compra una oferta
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping("/oferta/search/reload/dinero")
+	public String updateSaldoSearch(Model model, Pageable pageable, Principal principal) {
+		return "oferta/search :: nav";
+	}
+	
+	@RequestMapping("/home/update")
+	public String updateHome(Model model, Pageable pageable, Principal principal) {
+		String email = principal.getName(); // email es el name de la autenticación
+		User user = usersService.getUserByEmail(email);
+		httpSession.setAttribute("dinero", user.getDinero());
+		Page<Oferta> ofertas = ofertasService.getOfertasDestacadas(pageable, user);
+		model.addAttribute("ofertasDestacadasList", ofertas.getContent());
+		model.addAttribute("user", user);
+		model.addAttribute("page", ofertas);
+		return "home :: tablaOfertasDestacadas";
+	}
+	
 }

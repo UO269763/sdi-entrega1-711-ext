@@ -22,6 +22,7 @@ public class Oferta {
 	public double precio;
 	
 	private Boolean comprable=true;
+	private Boolean destacada=false;
 	
 	@ManyToOne
 	@JoinColumn(name = "user")
@@ -112,5 +113,12 @@ public class Oferta {
 		this.comprador = comprador;
 	}
 	 
+	public void setDestacada(Boolean b) {
+		this.destacada=b;
+	}
+	
+	public Boolean getDestacada() {
+		return destacada;
+	}
 	
 }
