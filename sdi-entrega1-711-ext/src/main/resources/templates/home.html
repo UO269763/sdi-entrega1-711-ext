@@ -9,41 +9,43 @@
 		<p>
 			<b th:inline="text"> [[${#httpServletRequest.remoteUser}]] </b>
 		</p>
-		<p th:text="#{home_saldo.message}"></p>
+		<p sec:authorize="hasRole('ROLE_USER')"
+			th:text="#{home_saldo.message}"></p>
 		<p>
-			<b th:text="${user.dinero}"></b>€
+			<b sec:authorize="hasRole('ROLE_USER')" th:text="${user.dinero}"></b>
 		</p>
 		<p>
 			<b th:if="${session.containsKey('email')}" th:text="${session.email}"></b>
 		</p>
-
-		<h3 th:text="#{home_offers_destacadas.message}"></h3>
-		<div class="table-responsive">
-			<table class="table table-hover" th:fragment="tablaOfertasDestacadas"
-				id="tablaOfertasDestacadas">
-				<thead>
-					<tr>
-						<th th:text="#{offer_list_title.message}"></th>
-						<th th:text="#{offer_list_descrp.message}"></th>
-						<th th:text="#{offer_list_price.message}"></th>
-						<th th:text="#{offer_list_date.message}"></th>
-						<th th:text="#{offer_list_buy.message}"></th>
-						<th class="col-md-1"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="oferta : ${ofertasDestacadasList}">
-						<td th:text="${oferta.titulo}"></td>
-						<td th:text="${oferta.descripcion}"></td>
-						<td th:text="${oferta.precio}"></td>
-						<td th:text="${#dates.format(oferta.fecha, 'dd MMM yyyy')}"></td>
-						
-						<td>
-							<div th:if="${session.dinero>=oferta.precio}">
-								<div th:if="${oferta.comprable}">
-									<button type="button" th:id="${'comprarBoton' + oferta.id}"
-										class="btn btn-info" th:text="#{offer_list_buy.message}"></button>
-									<script th:inline="javascript">
+		<div sec:authorize="hasRole('ROLE_USER')">
+			<h3 th:text="#{home_offers_destacadas.message}"></h3>
+			<div class="table-responsive">
+				<table class="table table-hover"
+					th:fragment="tablaOfertasDestacadas" id="tablaOfertasDestacadas">
+					<thead>
+						<tr>
+							<th th:text="#{offer_list_title.message}"></th>
+							<th th:text="#{offer_list_descrp.message}"></th>
+							<th th:text="#{offer_list_price.message}"></th>
+							<th th:text="#{offer_list_date.message}"></th>
+							<th th:text="#{offer_list_vendedor.message}"></th>
+							<th th:text="#{offer_list_buy.message}"></th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="oferta : ${ofertasDestacadasList}">
+							<td th:text="${oferta.titulo}"></td>
+							<td th:text="${oferta.descripcion}"></td>
+							<td th:text="${oferta.precio}"></td>
+							<td th:text="${#dates.format(oferta.fecha, 'dd MMM yyyy')}"></td>
+							<td th:text="${oferta.user}"></td>
+							<td>
+								<div th:if="${session.dinero>=oferta.precio}">
+									<div th:if="${oferta.comprable}">
+										<button type="button" th:id="${'comprarBoton' + oferta.id}"
+											class="btn btn-info" th:text="#{offer_list_buy.message}"></button>
+										<script th:inline="javascript">
 							/*<![CDATA[*/
 							$( "#comprarBoton[[${oferta.id}]]" ).click(function() {
 								$.get("/home/oferta/comprar/[[${oferta.id}]]", function(data) {
@@ -63,24 +65,25 @@
 							 });
 							 /*]]>*/
 						</script>
-								</div>
-								<div th:unless="${oferta.comprable}">
-									<button type="button" th:id="${'comprado' + oferta.id}"
-										class="btn btn-default" disabled
-										th:text="#{offer_list_bougth.message}"></button>
-								</div>
+									</div>
+									<div th:unless="${oferta.comprable}">
+										<button type="button" th:id="${'comprado' + oferta.id}"
+											class="btn btn-default" disabled
+											th:text="#{offer_list_bougth.message}"></button>
+									</div>
 
-							</div>
-							<div th:unless="${session.dinero>=oferta.precio}">
-								<div th:text=#{offer.sin_saldo}></div>
-							</div>
-						</td>
+								</div>
+								<div th:unless="${session.dinero>=oferta.precio}">
+									<div th:text=#{offer.sin_saldo}></div>
+								</div>
+							</td>
 
-					</tr>
-				</tbody>
-			</table>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
-		<footer th:replace="fragments/pagination" />
+		<footer sec:authorize="hasRole('ROLE_USER')" th:replace="fragments/pagination" />
 	</div>
 
 	<footer th:replace="fragments/footer" />

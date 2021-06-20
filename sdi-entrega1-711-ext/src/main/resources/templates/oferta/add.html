@@ -6,7 +6,6 @@
 
 	<div class="container">
 		<h1 id="new-oferta-title" th:text="#{offer_add.message}"></h1>
-
 		<form class="form-horizontal" method="post" action="/oferta/add"
 			th:object="${oferta}">
 
@@ -25,8 +24,9 @@
 					th:text="#{offer_add_descrp.message}"></label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" name="descripcion"
-						required="true" th:placeholder=#{offer_add_pl_descrp.message} /> <span
-						class="text-danger" th:if="${#fields.hasErrors('descripcion')}"
+						required="true" th:placeholder=#{offer_add_pl_descrp.message} />
+					<span class="text-danger"
+						th:if="${#fields.hasErrors('descripcion')}"
 						th:errors="*{descripcion}"></span>
 				</div>
 			</div>

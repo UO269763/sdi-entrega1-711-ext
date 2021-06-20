@@ -168,9 +168,12 @@ public class OfertasController {
 			return "oferta/add";
 		}
 		if (oferta.getDestacada()) {
-			logger.debug(String.format("Oferta añadida como destacada", user.getEmail()));
-			user.destacarOferta();
-			usersService.editUser(user);
+			if (user.getDinero()>=20) {
+				logger.debug(String.format("Oferta añadida como destacada", user.getEmail()));
+				user.destacarOferta();
+				usersService.editUser(user);
+			}
+			
 		}
 		ofertasService.addOferta(oferta, user);
 		httpSession.setAttribute("dinero", user.getDinero());
@@ -296,7 +299,7 @@ public class OfertasController {
 	 * @return
 	 */
 	@RequestMapping("/oferta/reload/dinero")
-	public String updateSaldoSearch(Model model, Pageable pageable, Principal principal) {
+	public String updateSaldo(Model model, Pageable pageable, Principal principal) {
 		return "oferta/search :: nav";
 	}
 

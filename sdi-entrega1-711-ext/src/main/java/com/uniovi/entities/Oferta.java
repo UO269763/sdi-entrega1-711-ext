@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "oferta")
 public class Oferta {
-	
+
 	@Id
 	@GeneratedValue
 	public Long id;
@@ -20,34 +20,38 @@ public class Oferta {
 	public String descripcion;
 	public Date fecha = new Date();
 	public double precio;
-	
-	private Boolean comprable=true;
-	private Boolean destacada=false;
-	
+
+	private Boolean comprable = true;
+	private Boolean destacada = false;
+
 	@ManyToOne
 	@JoinColumn(name = "user")
 	private User user;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "comprador")
 	private User comprador;
-	
+
 	public Oferta(String titulo, String descripcion, int precio) {
 		super();
-		this.titulo=titulo;
-		this.descripcion=descripcion;
-		this.precio=precio;
-		this.comprador=null;
-	}
-	
-	public Oferta(User user, String titulo, String descripcion, int precio) {
-		this(titulo,descripcion,precio);
-		this.user=user;
-	}
-	
-	public Oferta() {
+		this.titulo = titulo;
+		this.descripcion = descripcion;
+		this.precio = precio;
+		this.comprador = null;
 	}
 
+	public Oferta(User user, String titulo, String descripcion, int precio) {
+		this(titulo, descripcion, precio);
+		this.user = user;
+	}
+
+	public Oferta(User user, String titulo, String descripcion, int precio, Boolean destacada) {
+		this(user, titulo, descripcion, precio);
+		this.destacada = destacada;
+	}
+
+	public Oferta() {
+	}
 
 	public String getTitulo() {
 		return titulo;
@@ -80,7 +84,7 @@ public class Oferta {
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
-	
+
 	public User getUser() {
 		return user;
 	}
@@ -112,13 +116,13 @@ public class Oferta {
 	public void setComprador(User comprador) {
 		this.comprador = comprador;
 	}
-	 
+
 	public void setDestacada(Boolean b) {
-		this.destacada=b;
+		this.destacada = b;
 	}
-	
+
 	public Boolean getDestacada() {
 		return destacada;
 	}
-	
+
 }

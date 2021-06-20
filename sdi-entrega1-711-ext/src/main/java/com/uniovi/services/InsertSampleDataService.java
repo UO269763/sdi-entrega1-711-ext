@@ -50,20 +50,20 @@ public class InsertSampleDataService {
 		user6.setPassword("123456");
 		user6.setRole("ROLE_ADMIN");
 
-		Oferta oferta1 = new Oferta(user1, "Camiseta azul", "Talla L", 110);
+		Oferta oferta1 = new Oferta(user1, "Camiseta azul", "Talla L", 110, true);
 		Oferta oferta2 = new Oferta(user1, "Sudadera azul", "Talla M", 5);
 		Oferta oferta3 = new Oferta(user1, "Pantalon azul", "Talla XL", 3);
-		Oferta oferta4 = new Oferta(user2, "Zapatos nike", "Talla L", 10);
+		Oferta oferta4 = new Oferta(user2, "Zapatos nike", "Talla L", 10, true);
 		Oferta oferta5 = new Oferta(user2, "Sudadera nike", "Talla M", 4);
 		Oferta oferta6 = new Oferta(user2, "Pantalon nike", "Talla XL", 12);
-		Oferta oferta7 = new Oferta(user3, "Zapatos adidas", "Talla L", 10);
+		Oferta oferta7 = new Oferta(user3, "Zapatos adidas", "Talla L", 10, true);
 		Oferta oferta8 = new Oferta(user3, "Sudadera adidas", "Talla M", 2);
 		Oferta oferta9 = new Oferta(user3, "Pantalon adidas", "Talla XL", 5);
 		Oferta oferta10 = new Oferta(user4, "Calcetines", "Seminuevos", 6);
-		Oferta oferta11 = new Oferta(user4, "Chandal completo", "Talla M", 9);
+		Oferta oferta11 = new Oferta(user4, "Chandal completo", "Talla M", 9, true);
 		Oferta oferta12 = new Oferta(user4, "Chubasquero", "Talla XL", 11);
 		Oferta oferta13 = new Oferta(user5, "Zapatos", "Seminuevos", 90);
-		Oferta oferta14 = new Oferta(user5, "Sudadera", "Talla M", 6);
+		Oferta oferta14 = new Oferta(user5, "Sudadera", "Talla M", 6, true);
 		Oferta oferta15 = new Oferta(user5, "Pantalon", "Talla XL", 1);
 
 		// inicializamos las listas de ofertas de cada usuario

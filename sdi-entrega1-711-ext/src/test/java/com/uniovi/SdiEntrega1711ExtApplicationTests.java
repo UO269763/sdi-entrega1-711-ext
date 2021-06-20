@@ -197,10 +197,9 @@ public class SdiEntrega1711ExtApplicationTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "admin@email.es", "123456");
 		// COmprobamos que entramos en la pagina privada de usuario
-		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		PO_View.checkElement(driver, "text", "Gestión de usuarios");
 		// Ahora nos desconectamos
 		PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
-		// PO_PrivateView.logOut(driver, "Desconectar");
 		PO_View.checkElement(driver, "text", "Identifícate");
 	}
 
@@ -225,7 +224,7 @@ public class SdiEntrega1711ExtApplicationTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "admin@email.es", "123456");
 		// COmprobamos que entramos en la pagina privada de usuario
-		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		PO_View.checkElement(driver, "text", "Gestión de usuarios");
 		// Pinchamos la opcion de menu de usuario
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'users-menu')]/a");
 		elementos.get(0).click();
@@ -249,7 +248,7 @@ public class SdiEntrega1711ExtApplicationTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "admin@email.es", "123456");
 		// COmprobamos que entramos en la pagina privada de usuario
-		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		PO_View.checkElement(driver, "text", "Gestión de usuarios");
 		// Pinchamos la opcion de menu de usuario
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'users-menu')]/a");
 		elementos.get(0).click();
@@ -277,7 +276,7 @@ public class SdiEntrega1711ExtApplicationTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "admin@email.es", "123456");
 		// COmprobamos que entramos en la pagina privada de usuario
-		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		PO_View.checkElement(driver, "text", "Gestión de usuarios");
 		// Pinchamos la opcion de menu de usuario
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'users-menu')]/a");
 		elementos.get(0).click();
@@ -305,7 +304,7 @@ public class SdiEntrega1711ExtApplicationTests {
 		// Rellenamos el formulario
 		PO_LoginView.fillForm(driver, "admin@email.es", "123456");
 		// COmprobamos que entramos en la pagina privada de usuario
-		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		PO_View.checkElement(driver, "text", "Gestión de usuarios");
 		// Pinchamos la opcion de menu de usuario
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'users-menu')]/a");
 		elementos.get(0).click();
@@ -536,7 +535,6 @@ public class SdiEntrega1711ExtApplicationTests {
 		By boton = By.className("btn");
 		driver.findElement(boton).click();
 		// Comprar una sudadera
-		SeleniumUtils.esperarSegundos(driver, 2);
 		elementos = PO_View.checkElement(driver, "free", "//button[contains(text(), 'Comprar')]");
 		elementos.get(0).click();
 		URL = "http://localhost:8090/home";
@@ -593,10 +591,9 @@ public class SdiEntrega1711ExtApplicationTests {
 		// Vamos al formulario de registro
 		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
 		// Rellenamos el formulario.
-		PO_RegisterView.fillForm(driver, "lucas@email.es", "Lucas", "Garcia", "123456", "123456");
+		PO_RegisterView.fillForm(driver, "lucas2@email.es", "Lucas", "Garcia", "123456", "123456");
 		// COmprobamos que entramos en la pagina privada de usuario
 		SeleniumUtils.esperarSegundos(driver, 2);
-		PO_View.checkElement(driver, "text", "Gestión de ofertas");
 		// Pinchamos la opcion de menu de usuario
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'ofertas-menu')]/a");
 		elementos.get(0).click();
@@ -634,7 +631,6 @@ public class SdiEntrega1711ExtApplicationTests {
 		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'oferta/listCompras')]");
 		SeleniumUtils.esperarSegundos(driver, 2);
 		elementos.get(0).click();
-		SeleniumUtils.esperarSegundos(driver, 2);
 		PO_View.checkElement(driver, "text", "Zapatos adidas");
 		PO_View.checkElement(driver, "text", "Zapatos");
 	}
@@ -670,6 +666,13 @@ public class SdiEntrega1711ExtApplicationTests {
 		PO_PrivateView.checkChangeIdiom(driver, "btnSpanish", "btnEnglish", PO_Properties.getSPANISH(),
 				PO_Properties.getENGLISH());
 		// por ultimo comprobamos la vista de alta de oferta
+		// nos desconectamos para entrar como usuario normal
+		PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_LoginView.fillForm(driver, "pedro@email.es", "123456");
+		// COmprobamos que entramos en la pagina privada de usuario
+		PO_View.checkElement(driver, "text", "Gestión de ofertas");
 		// Pinchamos la opcion de menu de usuario
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'ofertas-menu')]/a");
 		elementos.get(0).click();
@@ -715,6 +718,127 @@ public class SdiEntrega1711ExtApplicationTests {
 		driver.navigate().to(URL);
 
 		SeleniumUtils.textoPresentePagina(driver, "HTTP Status 403 – Forbidden");
+
+	}
+
+	// 36. Al crear una oferta marcar dicha oferta como destacada y a continuación
+	// comprobar: i) que aparece en el listado de ofertas destacadas para los
+	// usuarios y que el saldo del usuario se actualiza adecuadamente en la vista
+	// del ofertante (-20).
+	@Test
+	public void PR36() {
+		URL = "http://localhost:8090/home";
+		driver.navigate().to(URL);
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_LoginView.fillForm(driver, "lucas2@email.es", "123456");
+		// Comprobamos que entramos en la pagina privada de usuario
+		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		// Pinchamos la opcion de menu de usuario
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'ofertas-menu')]/a");
+		elementos.get(0).click();
+		// Buscamos la opcion de ver lista de usuario
+		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'oferta/add')]");
+		elementos.get(0).click();
+		PO_AgregarOfertaView.fillForm(driver, "Nueva oferta destacada1", "oferta destacada de prueba", "20", true);
+		// comprobamos que el dinero se haya actualizado, como el usuario tenia 100,
+		// ahora tendrá 80
+		driver.navigate().to("http://localhost:8090/home");
+		PO_HomeView.checkElement(driver, "text", "80");
+		List<WebElement> elementos1 = PO_View.checkElement(driver, "free", "//li[contains(@id, 'ofertas-menu')]/a");
+		elementos1.get(0).click();
+		// Buscamos la opcion de ver lista de usuario
+		elementos1 = PO_View.checkElement(driver, "free", "//a[contains(@href, 'oferta/add')]");
+		elementos1.get(0).click();
+		PO_AgregarOfertaView.fillForm(driver, "Nueva oferta destacada2", "oferta destacada de prueba", "20", true);
+		// comprobamos que el dinero se haya actualizado, como el usuario tenia 80,
+		// ahora tendrá 60
+		driver.navigate().to("http://localhost:8090/home");
+		PO_HomeView.checkElement(driver, "text", "60");
+		List<WebElement> elementos2 = PO_View.checkElement(driver, "free", "//li[contains(@id, 'ofertas-menu')]/a");
+		elementos2.get(0).click();
+		// Buscamos la opcion de ver lista de usuario
+		elementos2 = PO_View.checkElement(driver, "free", "//a[contains(@href, 'oferta/add')]");
+		elementos2.get(0).click();
+		PO_AgregarOfertaView.fillForm(driver, "Nueva oferta destacada3", "oferta destacada de prueba", "20", true);
+		// comprobamos que el dinero se haya actualizado, como el usuario tenia 60,
+		// ahora tendrá 40
+		driver.navigate().to("http://localhost:8090/home");
+		PO_HomeView.checkElement(driver, "text", "40");
+		List<WebElement> elementos3 = PO_View.checkElement(driver, "free", "//li[contains(@id, 'ofertas-menu')]/a");
+		elementos3.get(0).click();
+		// Buscamos la opcion de ver lista de usuario
+		elementos3 = PO_View.checkElement(driver, "free", "//a[contains(@href, 'oferta/add')]");
+		elementos3.get(0).click();
+		PO_AgregarOfertaView.fillForm(driver, "Nueva oferta destacada4", "oferta destacada de prueba", "20", true);
+		// comprobamos que el dinero se haya actualizado, como el usuario tenia 40,
+		// ahora tendrá 20
+		driver.navigate().to("http://localhost:8090/home");
+		PO_HomeView.checkElement(driver, "text", "20");
+		// nos desconectamos para comprbar que desde otro usuario podemos ver la oferta
+		// destacada
+		PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
+		// entramos en sesion
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_LoginView.fillForm(driver, "pedro@email.es", "123456");
+		// Comprobamos que entramos en la pagina privada de usuario
+		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		// comprobamos que aparece la oferta destacada que acabamos de añadir
+		PO_HomeView.checkElement(driver, "text", "Nueva oferta destacada1");
+
+	}
+
+	// 37. Sobre el listado de ofertas de un usuario con menos de 20 euros de saldo,
+	// pinchar en el enlace Destacada y a continuación comprobar: que aparece en el
+	// listado de ofertas destacadas para los usuarios y que el saldo del usuario se
+	// actualiza adecuadamente en la vista del ofertante (-20).
+	@Test
+	public void PR37() {
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_LoginView.fillForm(driver, "lucas2@email.es", "123456");
+		// Comprobamos que entramos en la pagina privada de usuario
+		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		// Pinchamos la opcion de menu de usuario
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'ofertas-menu')]/a");
+		elementos.get(0).click();
+		// Buscamos la opcion de ver lista de usuario
+		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'oferta/add')]");
+		elementos.get(0).click();
+		PO_AgregarOfertaView.fillForm(driver, "Nueva oferta normal", "oferta destacada de prueba", "20");
+		//vamos a la lista fe ofertas propias
+		driver.navigate().to("http://localhost:8090/oferta/list");
+		elementos = PO_View.checkElement(driver, "free", "//button[contains(text(), 'Poner como destacada')]");
+		elementos.get(0).click();
+		driver.navigate().to("http://localhost:8090/home");
+		PO_HomeView.checkElement(driver, "text", "0");
+	}
+
+	// 38. Sobre el listado de ofertas de un usuario con menos de 20 euros de saldo,
+	// pinchar en el enlace Destacada y a continuación comprobar que se muestra el
+	// mensaje de saldo no suficiente.
+	@Test
+	public void PR38() {
+		PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+		// Rellenamos el formulario
+		PO_LoginView.fillForm(driver, "lucas2@email.es", "123456");
+		// Comprobamos que entramos en la pagina privada de usuario
+		PO_View.checkElement(driver, "text", "Gestión de ofertas");
+		// Pinchamos la opcion de menu de usuario
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id, 'ofertas-menu')]/a");
+		elementos.get(0).click();
+		// Buscamos la opcion de ver lista de usuario
+		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'oferta/add')]");
+		elementos.get(0).click();
+		PO_AgregarOfertaView.fillForm(driver, "Nueva oferta normal2", "oferta destacada de prueba", "20");
+		//vamos a la lista fe ofertas propias
+		driver.navigate().to("http://localhost:8090/oferta/list?page=1");
+		elementos = PO_View.checkElement(driver, "free", "//button[contains(text(), 'Poner como destacada')]");
+		elementos.get(0).click();
+		PO_View.checkElement(driver, "text", "No hay suficiente saldo");
+		driver.navigate().to("http://localhost:8090/home");
+		PO_HomeView.checkElement(driver, "text", "0");
 	}
 
 }

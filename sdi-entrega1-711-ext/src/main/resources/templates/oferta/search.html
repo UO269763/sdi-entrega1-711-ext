@@ -5,11 +5,11 @@
 	<!-- Barra de Navegación superior -->
 	<nav th:replace="fragments/nav" />
 	<div class="container">
-		<h2 th:text="#{offer_search.message}">Buscar ofertas</h2>
+		<h2 th:text="#{offer_search.message}"></h2>
 		<form class="navbar-form" action="/oferta/search">
 			<div class="form-group">
 				<input name="searchText" type="text" class="form-control" size="50"
-					placeholder="Buscar oferta por título">
+					th:placeholder="#{search_offer_title.message}">
 			</div>
 			<button type="submit" class="btn btn-default"
 				th:text="#{search.message}"></button>
@@ -24,13 +24,8 @@
 						<th th:text="#{offer_list_descrp.message}"></th>
 						<th th:text="#{offer_list_price.message}"></th>
 						<th th:text="#{offer_list_date.message}"></th>
+						<th th:text="#{offer_list_vendedor.message}"></th>
 						<th th:text="#{offer_list_buy.message}"></th>
-						<th class="col-md-1"></th>
-						<th class="col-md-1"></th>
-						<th class="col-md-1"></th>
-						<th class="col-md-1"></th>
-						<th class="col-md-1"></th>
-					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="oferta : ${ofertasList}" th:object="${oferta}"
@@ -39,7 +34,7 @@
 						<td th:text="${oferta.descripcion}"></td>
 						<td th:text="${oferta.precio}"></td>
 						<td th:text="${#dates.format(oferta.fecha, 'dd MMM yyyy')}"></td>
-
+						<td th:text="${oferta.user}"></td>
 						<td>
 							<div th:if="${session.dinero>=oferta.precio}">
 								<div th:if="${oferta.comprable}">
