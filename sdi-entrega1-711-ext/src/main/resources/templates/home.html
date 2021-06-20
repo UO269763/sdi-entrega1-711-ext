@@ -4,15 +4,14 @@
 <body>
 	<nav th:replace="fragments/nav" />
 	<div class="container" style="text-align: center">
-		<h2 th:text="#{home_welcome.message}">Bienvenido</h2>
-		<h3 th:text="#{home_private.message}">Esta es una zona privada la
-			Web</h3>
+		<h2 th:text="#{home_welcome.message}"></h2>
+		<h3 th:text="#{home_private.message}"></h3>
 		<p>
 			<b th:inline="text"> [[${#httpServletRequest.remoteUser}]] </b>
 		</p>
 		<p th:text="#{home_saldo.message}"></p>
 		<p>
-			<b th:text="${user.dinero}">â‚¬</b>
+			<b th:text="${user.dinero}"></b>€
 		</p>
 		<p>
 			<b th:if="${session.containsKey('email')}" th:text="${session.email}"></b>
@@ -49,7 +48,7 @@
 							$( "#comprarBoton[[${oferta.id}]]" ).click(function() {
 								$.get("/home/oferta/comprar/[[${oferta.id}]]", function(data) {
 									
-										var urlUpdate = '/oferta/search/reload/dinero'; 
+										var urlUpdate = '/oferta/reload/dinero'; 
 									
 										$("#nav").load(urlUpdate);
 										var numberPage = [[${param.page}]];
@@ -73,7 +72,7 @@
 
 							</div>
 							<div th:unless="${session.dinero>=oferta.precio}">
-								<div th:text=#{offer.sin_saldo}>Sin saldo</div>
+								<div th:text=#{offer.sin_saldo}></div>
 							</div>
 						</td>
 

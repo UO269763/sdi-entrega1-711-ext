@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,7 +69,7 @@ public class OfertasController {
 	 * @param model
 	 * @param pageable
 	 * @param principal
-	 * @return
+	 * @return oferta/list :: tableOfertasList
 	 */
 	@RequestMapping(value = "/oferta/list/update", method = RequestMethod.GET)
 	public String getListUpdate(Model model, Pageable pageable, Principal principal) {
@@ -212,7 +211,16 @@ public class OfertasController {
 		}
 		return "redirect:/oferta/search";
 	}
-	
+
+	/**
+	 * Método encargado de comprar una oferta destacada en la vista de home en caso
+	 * de que el usuario tenga dinero Redirecciona a home
+	 * 
+	 * @param model
+	 * @param principal
+	 * @param id
+	 * @return redirect:/home
+	 */
 	@RequestMapping(value = "/home/oferta/comprar/{id}", method = RequestMethod.GET)
 	public String comprarOfertaHome(Model model, Principal principal, @PathVariable Long id) {
 		String email = principal.getName(); // email es el name de la autenticación
@@ -280,31 +288,26 @@ public class OfertasController {
 	}
 
 	/**
-	 * Metodo que recarga el saldo cuando un usuario destaca una oferta
+	 * Metodo que recarga el saldo cuando un usuario compra/destaca una oferta
 	 * 
 	 * @param model
 	 * @param pageable
 	 * @param principal
 	 * @return
 	 */
-	@RequestMapping("/oferta/list/reload/dinero")
-	public String updateSaldoList(Model model, Pageable pageable, Principal principal) {
-		return "oferta/list :: nav";
-	}
-	
-	/**
-	 * Metodo que recarga el saldo cuando un usuario compra una oferta
-	 * 
-	 * @param model
-	 * @param pageable
-	 * @param principal
-	 * @return
-	 */
-	@RequestMapping("/oferta/search/reload/dinero")
+	@RequestMapping("/oferta/reload/dinero")
 	public String updateSaldoSearch(Model model, Pageable pageable, Principal principal) {
 		return "oferta/search :: nav";
 	}
-	
+
+	/**
+	 * Se encarga de recarga la página de home cuando se compra una oferta destacada
+	 * 
+	 * @param model
+	 * @param pageable
+	 * @param principal
+	 * @return /home/update
+	 */
 	@RequestMapping("/home/update")
 	public String updateHome(Model model, Pageable pageable, Principal principal) {
 		String email = principal.getName(); // email es el name de la autenticación
@@ -316,5 +319,5 @@ public class OfertasController {
 		model.addAttribute("page", ofertas);
 		return "home :: tablaOfertasDestacadas";
 	}
-	
+
 }
